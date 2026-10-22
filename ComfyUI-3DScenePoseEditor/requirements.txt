@@ -1,0 +1,2 @@
+# The custom node has no extra Python dependencies.
+# ComfyUI itself already provides torch, numpy, Pillow and aiohttp.

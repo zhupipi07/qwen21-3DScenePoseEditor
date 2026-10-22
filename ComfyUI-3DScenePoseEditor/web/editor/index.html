@@ -1,0 +1,113 @@
+<!doctype html>
+<html lang="zh-CN">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1" />
+  <title>3D 场景与姿势编辑器</title>
+  <link rel="icon" href="data:," />
+  <link rel="stylesheet" href="./style.css" />
+</head>
+<body>
+  <div id="app">
+    <header id="topbar">
+      <div class="brand">
+        <div class="brand-mark">3D</div>
+        <div class="brand-text">
+          <div class="brand-title">场景与姿势编辑器</div>
+          <div class="brand-sub">我摆人物 · 布粗场景 · 调镜头 · AI 成图</div>
+        </div>
+      </div>
+      <div class="scene-title-wrap">
+        <input id="scene-name" class="scene-name" value="未命名场景" spellcheck="false" />
+        <span id="save-state" class="save-state">已自动保存</span>
+      </div>
+      <div class="top-actions">
+        <button id="btn-undo" class="icon-btn" title="撤销 (Ctrl+Z)">↶</button>
+        <button id="btn-redo" class="icon-btn" title="重做 (Ctrl+Shift+Z)">↷</button>
+        <span class="divider"></span>
+        <button id="btn-help" class="ghost-btn">帮助</button>
+        <button id="btn-preview" class="ghost-btn">预览控制图</button>
+        <button id="btn-apply" class="primary-btn">应用到节点</button>
+        <button id="btn-close" class="ghost-btn close-btn" title="关闭">✕</button>
+      </div>
+    </header>
+
+    <main id="workspace">
+      <aside id="left-panel" class="panel">
+        <nav id="tabbar">
+          <button class="tab active" data-tab="objects"><span>对象</span></button>
+          <button class="tab" data-tab="pose"><span>姿势</span></button>
+          <button class="tab" data-tab="camera"><span>镜头</span></button>
+          <button class="tab" data-tab="refs"><span>参考</span></button>
+          <button class="tab" data-tab="scene"><span>场景</span></button>
+        </nav>
+        <div id="tab-content" class="tab-content"></div>
+      </aside>
+
+      <section id="stage">
+        <div id="canvas-wrap">
+          <canvas id="viewport"></canvas>
+          <div id="viewport-top">
+            <div class="view-pill" id="view-pill">自由视图</div>
+            <div class="view-pill subtle" id="output-pill">960 × 1280 · 3:4</div>
+          </div>
+          <div id="viewport-hint" class="viewport-hint">左键旋转 · 右键平移 · 滚轮缩放 · 双击聚焦</div>
+          <div id="shot-hint" class="shot-hint hidden">镜头视图：拖动旋转镜头 · 滚轮推拉 · 按 Esc 返回</div>
+          <div id="empty-hint" class="empty-hint hidden">
+            <div class="empty-icon">◎</div>
+            <div class="empty-title">先放一个角色或道具</div>
+            <div class="empty-sub">从左侧「对象」添加内置人偶，或导入自己的 GLB / VRM</div>
+          </div>
+          <div id="drop-overlay" class="drop-overlay hidden"><div>松手导入</div><small>GLB / GLTF / VRM / 图片参考</small></div>
+          <div id="loading-overlay" class="loading-overlay hidden">
+            <div class="spinner"></div>
+            <div id="loading-text">正在加载…</div>
+            <div class="progress"><div id="loading-bar"></div></div>
+          </div>
+        </div>
+        <div id="bottombar">
+          <div class="mode-group">
+            <button class="mode-btn active" data-mode="select" title="选择 (Q)">选择</button>
+            <button class="mode-btn" data-mode="move" title="移动 (W)">移动</button>
+            <button class="mode-btn" data-mode="rotate" title="旋转 (E)">旋转</button>
+            <button class="mode-btn" data-mode="scale" title="缩放 (R)">缩放</button>
+            <button class="mode-btn pose-mode-btn" data-mode="pose" title="摆姿势 (P)">摆姿势</button>
+          </div>
+          <div class="view-toggles">
+            <label class="check"><input type="checkbox" id="toggle-grid" checked />网格</label>
+            <label class="check"><input type="checkbox" id="toggle-snap" checked />吸附</label>
+            <label class="check"><input type="checkbox" id="toggle-camera" />镜头视图</label>
+          </div>
+          <div class="status-text" id="status-text">准备就绪</div>
+          <div class="capture-state" id="capture-state">尚未应用</div>
+        </div>
+      </section>
+
+      <aside id="right-panel" class="panel">
+        <div class="panel-heading">
+          <span>属性</span>
+          <span id="inspector-kind" class="muted"></span>
+        </div>
+        <div id="inspector" class="inspector"></div>
+        <div class="panel-heading small">
+          <span>输出</span>
+          <button id="btn-shot-settings" class="link-btn">尺寸</button>
+        </div>
+        <div id="output-summary" class="output-summary"></div>
+      </aside>
+    </main>
+  </div>
+
+  <div id="modal-root"></div>
+  <div id="toast-root"></div>
+
+  <input type="file" id="file-character" accept=".glb,.gltf,.vrm,.bin,.png,.jpg,.jpeg,.webp" multiple hidden />
+  <input type="file" id="file-prop" accept=".glb,.gltf,.vrm,.bin,.png,.jpg,.jpeg,.webp" multiple hidden />
+  <input type="file" id="file-scene-model" accept=".glb,.gltf,.bin,.png,.jpg,.jpeg,.webp" multiple hidden />
+  <input type="file" id="file-ref-character" accept="image/*" multiple hidden />
+  <input type="file" id="file-ref-style" accept="image/*" multiple hidden />
+  <input type="file" id="file-scene-import" accept=".json,application/json" hidden />
+
+  <script type="module" src="./editor.bundle.js"></script>
+</body>
+</html>
